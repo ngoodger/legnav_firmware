@@ -1,0 +1,64 @@
+
+#define MOTOR_RIGHT OUT_A
+#define MOTOR_LEFT OUT_B
+#define WHEEL_GEAR_RATIO 10
+#define WHEEL_DIAMETER 0.03 
+#define WHEEL_TO_WHEEL 0.15
+struct pose
+{
+  float x; /*x position meters*/
+  float y; /*y position meters*/
+  float phi /*rotation about z (radians)*/
+};
+
+task position_task()
+{
+ long curAngleRight=MotorRotationCount(MOTOR_RIGHT);
+ long curAngleLeft=MotorRotationCount(MOTOR_LEFT); 
+ long prevAngleRight=curAngleRight; 
+ long prevAngleLeft=curAngleLeft; 
+ long deltaAngleRight=0; 
+ long deltaAngleLeft=0; 
+ long odoRight=0;
+ long odoLeft=0;
+ 
+ while (true)
+ {
+   
+   /*Wait for encoder value change (Movement)*/
+   while (curAngleRight==prevAngleRight && curAngleLeft==prevAngleLeft){
+     Wait(1);
+    curAngleRight = MotorRotationCount(MOTOR_RIGHT);
+    curAngleLeft = MotorRotationCount(MOTOR_LEFT);
+  }
+    
+    deltaAngleRight=curAngleRight-prevAngleRight;
+    deltaAngleLeft=curAngleLeft-prevAngleLeft;
+
+    /*Reverse sign of deltaAngleRight if zero crossing*/
+    if (deltaAngleRight!=0){
+      if ((prevAngleRight>180 && curAngleRight<180) || 
+          (prevAngleRight<180 && curAngleRight>180) )
+        deltaAngleRight=-1*deltaAngleRight;      
+    }
+    /*Reverse sign of deltaAngleRight if zero crossing*/   
+    if (deltaAngleLeft!=0){
+      if ((prevAngleLeft>180 && curAngleLeft<180) || 
+          (prevAngleLeft<180 && curAngleLeft>180) )
+        deltaAngleLeft=-1*deltaAngleLeft;      
+    }
+    
+    /*Update prevAngle with curAngle for next iteration */
+    prevAngleRight=curAngleRight;
+    prevAngleLeft=curAngleLeft;
+    
+    /*Assume small angle so turn is line rather than arc.*/
+    /*Magnitude of center move is 0.5 of wheel*/
+    magRight=0.5*deltaAngleRight*WHEEL_DIAMETER/WHEEL_GEAR_RATIO;
+    magLeft=0.5*deltaAngleLeft*WHEEL_DIAMETER/WHEEL_GEAR_RATIO; 
+
+    x=magRight*cos(phi); 
+    y=magRight*sin(phi);
+    phi=WHEEL_TO_WHEEL*
+ }
+}

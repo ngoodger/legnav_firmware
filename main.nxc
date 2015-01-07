@@ -1,2 +1,35 @@
-RotateMotorEx(OUT_AC, 50, 360, 0, true, true);
 
+ //x pos and y pos upd
+ byte xpos=50;
+ byte ypos=50;
+ 
+task main()
+{
+ 
+ long t0, time;
+t0 = CurrentTick();
+  time = CurrentTick()-t0;
+  
+ byte map[100][100]; //50mm x 50mm squares.  1=covered, 0=not covered.
+ 
+
+ 
+  SetSensor(IN_1,SENSOR_TOUCH);
+  OnFwd(OUT_AC, 30);
+
+/* Drive forward something is hit or distance limit is reached */
+ 
+while (SENSOR_1 != 1 && 
+
+if ()
+  RotateMotorEx(OUT_AC, 30, 10, 0, true, true);
+
+   while (true)
+ {
+ if (SENSOR_1 == 1)
+ {
+    
+ }
+}
+
+}
