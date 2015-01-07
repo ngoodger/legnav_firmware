@@ -16,7 +16,7 @@ struct pose
 /*Initial pose is zero*/
 pose CurPose={0.0,0.0,0.0};
 
-task position_task()
+task poseEstimator_task()
 {
     long curAngleLeft=MotorRotationCount(MOTOR_LEFT); 
     long curAngleRight=MotorRotationCount(MOTOR_RIGHT);
