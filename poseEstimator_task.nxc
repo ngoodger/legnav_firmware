@@ -18,62 +18,62 @@ pose CurPose={0.0,0.0,0.0};
 
 task poseEstimator_task()
 {
-    long curAngleLeft=MotorRotationCount(MOTOR_LEFT); 
-    long curAngleRight=MotorRotationCount(MOTOR_RIGHT);
-    long prevAngleLeft=curAngleLeft; 
-    long prevAngleRight=curAngleRight; 
-    long deltaAngleLeft=0; 
-    long deltaAngleRight=0; 
-    float deltaLeft=0.0;
-    float deltaRight=0.0;
-    float deltaLeftMeters=0.0;
-    float deltaRightMeters=0.0;
-    float magnitude=0.0;
- 
-    while (true)
-    {
-    /*Wait for encoder value change (Movement)*/
-    while (curAngleLeft==prevAngleLeft && curAngleRight==prevAngleRight){
-        Wait(1);
-        curAngleLeft = MotorRotationCount(MOTOR_LEFT);
-        curAngleRight = MotorRotationCount(MOTOR_RIGHT);
-    }
+  long curAngleLeft=MotorRotationCount(MOTOR_LEFT); 
+  long curAngleRight=MotorRotationCount(MOTOR_RIGHT);
+  long prevAngleLeft=curAngleLeft; 
+  long prevAngleRight=curAngleRight; 
+  long deltaAngleLeft=0; 
+  long deltaAngleRight=0; 
+  float deltaLeft=0.0;
+  float deltaRight=0.0;
+  float deltaLeftMeters=0.0;
+  float deltaRightMeters=0.0;
+  float magnitude=0.0;
 
-    deltaAngleLeft=curAngleLeft-prevAngleLeft;   
-    deltaAngleRight=curAngleRight-prevAngleRight;
+  while (true)
+  {
+  /*Wait for encoder value change (Movement)*/
+  while (curAngleLeft==prevAngleLeft && curAngleRight==prevAngleRight){
+      Wait(1);
+    curAngleLeft = MotorRotationCount(MOTOR_LEFT);
+    curAngleRight = MotorRotationCount(MOTOR_RIGHT);
+  }
 
-    /*Reverse sign of deltaAngleRight if zero crossing*/   
-    if (deltaAngleLeft!=0){
-      if ((prevAngleLeft>180 && curAngleLeft<180) || 
-          (prevAngleLeft<180 && curAngleLeft>180) )
-        deltaAngleLeft=-1*deltaAngleLeft;      
-    }
-    /*Reverse sign of deltaAngleRight if zero crossing*/
-    if (deltaAngleRight!=0){
-      if ((prevAngleRight>180 && curAngleRight<180) ||  
-          (prevAngleRight<180 && curAngleRight>180) )
-        deltaAngleRight=-1*deltaAngleRight;      
-    }
+  deltaAngleLeft=curAngleLeft-prevAngleLeft;   
+  deltaAngleRight=curAngleRight-prevAngleRight;
 
-    deltaLeft=deltaAngleLeft/(360*WHEEL_GEAR_RATIO);
-    deltaLeftMeters=PI*WHEEL_DIAMETER*deltaLeft; 
-    deltaRight=deltaAngleRight/(360*WHEEL_GEAR_RATIO);
-    deltaRightMeters=PI*WHEEL_DIAMETER*deltaRight;
+  /*Reverse sign of deltaAngleRight if zero crossing*/   
+  if (deltaAngleLeft!=0){
+    if ((prevAngleLeft>180 && curAngleLeft<180) || 
+        (prevAngleLeft<180 && curAngleLeft>180) )
+      deltaAngleLeft=-1*deltaAngleLeft;      
+  }
+  /*Reverse sign of deltaAngleRight if zero crossing*/
+  if (deltaAngleRight!=0){
+    if ((prevAngleRight>180 && curAngleRight<180) ||  
+        (prevAngleRight<180 && curAngleRight>180) )
+      deltaAngleRight=-1*deltaAngleRight;      
+  }
 
-    /*Approximately update the pose---------------------------------*/
-    /*Assumes small angle so turn is line rather than arc.*/
-    /*Magnitude of the movement*/
-    magnitude=(deltaRightMeters+deltaRLeftMeters)/2.0;
-    /*Calculate change in angle phi*/
-    CurPose.phi+=(deltaRightMeters-deltaRLeftMeters)/WHEELBASE;
-    /*Calculate x movement based on the new angle phi*/
-    CurPose.x+=magnitude*cos(phi);
-    /*Calculate y movement based on the new angle phi*/
-    CurPose.y+=magnitude*sin(phi); 
-     /*-------------------------------------------------------------*/
+  deltaLeft=deltaAngleLeft/(360*WHEEL_GEAR_RATIO);
+  deltaLeftMeters=PI*WHEEL_DIAMETER*deltaLeft; 
+  deltaRight=deltaAngleRight/(360*WHEEL_GEAR_RATIO);
+  deltaRightMeters=PI*WHEEL_DIAMETER*deltaRight;
 
-    /*Update prevAngle with curAngle for next iteration */
-    prevAngleLeft=curAngleLeft;
-    prevAngleRight=curAngleRight;
-    }
+  /*Approximately update the pose---------------------------------*/
+  /*Assumes small angle so turn is line rather than arc.*/
+  /*Magnitude of the movement*/
+  magnitude=(deltaRightMeters+deltaRLeftMeters)/2.0;
+  /*Calculate change in angle phi*/
+  CurPose.phi+=(deltaRightMeters-deltaRLeftMeters)/WHEELBASE;
+  /*Calculate x movement based on the new angle phi*/
+  CurPose.x+=magnitude*cos(phi);
+  /*Calculate y movement based on the new angle phi*/
+  CurPose.y+=magnitude*sin(phi); 
+   /*-------------------------------------------------------------*/
+
+  /*Update prevAngle with curAngle for next iteration */
+  prevAngleLeft=curAngleLeft;
+  prevAngleRight=curAngleRight;
+  }
 }
