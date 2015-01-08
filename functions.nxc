@@ -6,3 +6,18 @@ long Alpha(pose fromPose,pose toPose)
     Alpha=atan2(xError/yError);
     return Alpha;
 }
+
+#define KP 1.0
+#define KI 0.1
+#define KD 0.1
+
+ProportionalError=Phi-Alpha;
+IntegralError+=IntegralError+ProportionalError*timeStep;
+DerivativeError=(ProportionalError-LastProportionalError)/timeStep;
+LastOritentationError=ProportionalError;
+
+SteerAction=OrientationError
+
+
+
+
