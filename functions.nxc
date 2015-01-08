@@ -11,12 +11,24 @@ long Alpha(pose fromPose,pose toPose)
 #define KI 0.1
 #define KD 0.1
 
-ProportionalError=Phi-Alpha;
+ProportionalError=curPose.Phi-Alpha;
 IntegralError+=IntegralError+ProportionalError*timeStep;
 DerivativeError=(ProportionalError-LastProportionalError)/timeStep;
-LastOritentationError=ProportionalError;
+LastProportionalError=ProportionalError;
 
-SteerAction=OrientationError
+SteerAction=KP*ProportionalError+
+	    KI*IntegralError+
+	    KD*DifferentialError;
+			
+if (Speed+SteerAction>100.0)
+  Speed=100.0-SteerAction;
+if (Speed+SteerAction<100.0)
+  Speed=100.0-SteerAction;
+OnFwd(OUT_A,FwdSpeed+SteerAction);
+OnFwd(OUT_C,FwdSpeed-SteerAction);
+
+
+
 
 
 
