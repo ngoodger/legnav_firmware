@@ -18,8 +18,9 @@ while (saveSensor1 != 1 && magnitude<MAX_START_DISTANCE){
     magnitude=sqrt(CurPose.x^2+CurPose.y^2);
   }
     
-    if (SENSOR_1 != 1)
-  RotateMotorEx(OUT_AC, 30, 10, 0, true, true);
+  /*Collision detected*/
+  if (saveSensor1 == 1)
+    RotateMotorEx(OUT_AC, 30, 10, 0, true, true);
 
    while (true)
  {

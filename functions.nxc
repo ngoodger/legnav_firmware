@@ -1,0 +1,8 @@
+long Alpha(pose fromPose,pose toPose)
+{
+    long Alpha
+    xError=toPose.x-toPose.x;
+    yError=toPose.y-toPose.y;
+    Alpha=atan2(xError/yError);
+    return Alpha;
+}
