@@ -10,6 +10,29 @@ long rightMotor=0;
     return Alpha;
 }
 
+if (Speed+SteerAction>100.0)
+  Speed=100.0-SteerAction;
+if (Speed+SteerAction<-100.0)
+  Speed=100.0-SteerAction;
+
+/*Calculate Left and right Motor speeds. 0.5 Rounds to integer.*/
+LeftMotor=Speed+SteerAction+0.5;
+RightMotor=Speed-SteerAction+0.5;			
+if (LeftMotor>100.0)
+  LeftMotor=100.0;
+if (SteerAction<-100.0)
+  SteerAction=-100.0;
+OnFwd(OUT_A,LeftMotor);
+OnFwd(OUT_C,RightMotor);
+struct GainPID
+{
+  float Kp;
+  float Ki;
+  float Kd;
+}
+SteerPID (float input, float setpoint,GainPID ErrorGain)
+{
+
 #define KP 1.0
 #define KI 0.1
 #define KD 0.1
@@ -22,23 +45,7 @@ LastProportionalError=ProportionalError;
 SteerAction=KP*ProportionalError+
 	    KI*IntegralError+
 	    KD*DifferentialError;
-
-if (Speed+SteerAction>100.0)
-  Speed=100.0-SteerAction;
-if (Speed+SteerAction<-100.0)
-  Speed=100.0-SteerAction;
-
-/*Calculate Left and right Motor speeds. 0.5 Rounds to integer.*/
-LeftMotor=Speed+SteerAction+0.5;
-RightMotor=Speed-SteerAction+0.5;			
-if (SteerAction>100.0)
-  SteerAction=100.0;
-if (SteerAction<-100.0)
-  SteerAction=-100.0;
-OnFwd(OUT_A,FwdSpeed+SteerAction);
-OnFwd(OUT_C,FwdSpeed-SteerAction);
-
-
+}
 
 
 
