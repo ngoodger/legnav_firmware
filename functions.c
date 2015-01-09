@@ -24,30 +24,6 @@ if (SteerAction<-100.0)
   SteerAction=-100.0;
 OnFwd(OUT_A,LeftMotor);
 OnFwd(OUT_C,RightMotor);
-struct GainPID
-{
-  float Kp;
-  float Ki;
-  float Kd;
-}
-SteerPID (float input, float setpoint,GainPID ErrorGain)
-{
-
-#define KP 1.0
-#define KI 0.1
-#define KD 0.1
-
-ProportionalError=curPose.Phi-Alpha;
-IntegralError+=IntegralError+ProportionalError*timeStep;
-DerivativeError=(ProportionalError-LastProportionalError)/timeStep;
-LastProportionalError=ProportionalError;
-
-SteerAction=KP*ProportionalError+
-	    KI*IntegralError+
-	    KD*DifferentialError;
-}
-
-
 
 
 
