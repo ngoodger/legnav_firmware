@@ -1,22 +1,35 @@
 
-
-struct GainPID
+struct sPIDdata 
 {
   float Kp;
   float Ki;
   float Kd;
+  float input;
+  float setpoint;
+  float output;
+  float lastProportionalError;
+  float IntegralError;
+  float lastTime 
 }
 
-SteerPID (float input, float setpoint,GainPID ErrorGain)
+float PIDcontroller(sPIDdata*PIDdata)
 {
-  ProportionalError=input-setpoint;
-  IntegralError+=IntegralError+ProportionalError*timeStep;
-  DerivativeError=(ProportionalError-LastProportionalError)/timeStep;
-  LastProportionalError=ProportionalError;
+  float ProportionalError;
+  float DerivativeError;
+  long currentTime;
 
-  SteerAction=ErrorGain.Kp*ProportionalError+
-	      ErrorGain.Ki*IntegralError+
-	      ErrorGain.Kd*DifferentialError;
+  ProportionalError=PIDdata->input-PIDdata->setpoint;
+  currentTime=currentTick(); 
+  timeStep=currentTime-lastTime;
+  IntegralError+=PIDdata->IntegralError+ProportionalError*timeStep;
+  DerivativeError=(ProportionalError-PIDdata->lastProportionalError)/timeStep;
+  PIDdata->lastProportionalError=ProportionalError;
+
+  output=PIDdata->Kp*ProportionalError+
+         PIDdata->Ki*IntegralError+
+         PIDdata->Kd*DifferentialError;
+
+  return output;
 }
 
 
