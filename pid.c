@@ -21,7 +21,7 @@ float PIDcontroller(sPIDdata*PIDdata)
   ProportionalError=PIDdata->input-PIDdata->setpoint;
   currentTime=currentTick(); 
   timeStep=currentTime-lastTime;
-  IntegralError+=PIDdata->IntegralError+ProportionalError*timeStep;
+  IntegralError+=ProportionalError*timeStep;
   DerivativeError=(ProportionalError-PIDdata->lastProportionalError)/timeStep;
   PIDdata->lastProportionalError=ProportionalError;
 

@@ -1,6 +1,6 @@
 long Alpha(pose fromPose,pose toPose)
-long leftMotor=0;
-long rightMotor=0;
+long leftMotorAction=0;
+long rightMotorAction=0;
 
 {
     long Alpha
@@ -10,20 +10,21 @@ long rightMotor=0;
     return Alpha;
 }
 
-if (Speed+SteerAction>100.0)
-  Speed=100.0-SteerAction;
-if (Speed+SteerAction<-100.0)
-  Speed=100.0-SteerAction;
+PIDcontroller(&steerPID)
+if (commonMotorAction+differentialMotorAction>100.0)
+  commonMotorAction=100.0-differentialMotorAction;
+if (commonMotorAction+differentialMotorAction<-100.0)
+  commonMotorAction=-100.0-differentialMotorAction;
 
 /*Calculate Left and right Motor speeds. 0.5 Rounds to integer.*/
-LeftMotor=Speed+SteerAction+0.5;
-RightMotor=Speed-SteerAction+0.5;			
-if (LeftMotor>100.0)
-  LeftMotor=100.0;
-if (SteerAction<-100.0)
-  SteerAction=-100.0;
-OnFwd(OUT_A,LeftMotor);
-OnFwd(OUT_C,RightMotor);
+leftMotorAction=commonMotorAction+differentialMotorAction+0.5;
+rightMotorAction=commonMotorAction-differentialMotorAction+0.5;			
+if (leftMotorAction>100.0)
+  leftMotorAction=100;
+if (rightMotorAction<-100.0)
+  rightMotorAction=-100;
+OnFwd(OUT_A,leftMotorAction);
+OnFwd(OUT_C,rightMotorAction);
 
 
 
