@@ -16,6 +16,10 @@ struct pose
 /*Initial pose is zero*/
 pose CurPose={0.0,0.0,0.0};
 
+int getCurrentPose(Pose *returnPose)
+{
+  memcpy(returnPose,CurPose);
+}
 task poseEstimator_task()
 {
   long curAngleLeft=MotorRotationCount(MOTOR_LEFT); 
