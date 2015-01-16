@@ -1,18 +1,17 @@
 
-struct sPIDdata 
+int initPID(sPIDdata*PIDdata,Kp,Ki,Kd)
 {
-  float Kp;
-  float Ki;
-  float Kd;
-  float input;
-  float setpoint;
-  float output;
-  float lastProportionalError;
-  float IntegralError;
-  float lastTime 
+  PIDdata.Kp=Kp;
+  PIDdata.Ki=Ki;
+  PIDdata.Kd=Kd; 
+  PIDdata.input=0;
+  PIDdata.setpoint=0;
+  PIDdata.output=0;
+  PIDdata.lastProportionalError=0;
+  PIDdata.IntegralError=0;
+  PIDdata.lastTime=0;
 }
-
-float PIDcontroller(sPIDdata*PIDdata)
+float iteratePID(sPIDdata*PIDdata)
 {
   float ProportionalError;
   float DerivativeError;
