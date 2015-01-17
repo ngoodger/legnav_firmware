@@ -14,5 +14,7 @@ struct sPIDdata
   float lastTime 
 }
 
-float iteratePID(sPIDdata*PIDdata);
+int iteratePID(sPIDdata*PIDdata);
+int initPID( sPIDdata*PIDdata);
+
 #endif /* PID_H */

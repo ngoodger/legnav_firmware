@@ -1,4 +1,4 @@
-
+#include "poseTask.h"
 #define MOTOR_RIGHT OUT_A
 #define MOTOR_LEFT OUT_B
 #define WHEEL_GEAR_RATIO 10.0
@@ -6,19 +6,15 @@
 #define WHEELBASE 0.15
 #define PI 3.141593
 
-struct pose
-{
-  float x; /*x position meters*/
-  float y; /*y position meters*/
-  float phi /*rotation about z (radians)*/
-};
-
 /*Initial pose is zero*/
-pose CurPose={0.0,0.0,0.0};
+posescurrentPose={0.0,0.0,0.0};
+mutex mutexCurrentPose;
 
 int getCurrentPose(Pose *returnPose)
 {
-  memcpy(returnPose,CurPose);
+  Acuquire(mutexCurrentPose);
+  memcpy(returnPose,CurrentPose);
+  Release(mutexCurrentPose);
 }
 task poseEstimator_task()
 {
@@ -68,13 +64,16 @@ task poseEstimator_task()
   /*Assumes small angle so turn is line rather than arc.*/
   /*Magnitude of the movement*/
   magnitude=(deltaRightMeters+deltaRLeftMeters)/2.0;
+
+  Acquire(mutexCurrentPose);
   /*Calculate change in angle phi*/
-  CurPose.phi+=(deltaRightMeters-deltaRLeftMeters)/WHEELBASE;
+ currentPose.phi+=(deltaRightMeters-deltaRLeftMeters)/WHEELBASE;
   /*Calculate x movement based on the new angle phi*/
-  CurPose.x+=magnitude*cos(phi);
+ currentPose.x+=magnitude*cos(phi);
   /*Calculate y movement based on the new angle phi*/
-  CurPose.y+=magnitude*sin(phi); 
+ currentPose.y+=magnitude*sin(phi); 
    /*-------------------------------------------------------------*/
+  Release(mutexCurrentPose);
 
   /*Update prevAngle with curAngle for next iteration */
   prevAngleLeft=curAngleLeft;

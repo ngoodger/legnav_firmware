@@ -1,8 +1,12 @@
-  enum NavigationStates {freeBumper,turnLeft,driveForward,turnRight};
+#include "navigationTask.h"  
 
-NavigationStates NavigationState;  
+enum NavigationStates {freeBumper,turnLeft,driveForward,turnRight};
 
- SetSensor(IN_1,SENSOR_TOUCH);
+task Navigation_task
+{
+  NavigationStates NavigationState;  
+
+  SetSensor(IN_1,SENSOR_TOUCH);
   OnFwd(OUT_AC, 30);
 
   /* Drive forward something is hit or distance limit is reached */
@@ -48,4 +52,4 @@ NavigationStates NavigationState;
     default:
       break;
   }
-
+}

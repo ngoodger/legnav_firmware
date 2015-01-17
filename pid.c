@@ -1,17 +1,19 @@
+#include "pid.h"
 
 int initPID(sPIDdata*PIDdata,Kp,Ki,Kd)
 {
-  PIDdata.Kp=Kp;
-  PIDdata.Ki=Ki;
-  PIDdata.Kd=Kd; 
-  PIDdata.input=0;
-  PIDdata.setpoint=0;
-  PIDdata.output=0;
-  PIDdata.lastProportionalError=0;
-  PIDdata.IntegralError=0;
-  PIDdata.lastTime=0;
+  PIDdata->Kp=Kp;
+  PIDdata->Ki=Ki;
+  PIDdata->Kd=Kd; 
+  PIDdata->input=0;
+  PIDdata->setpoint=0;
+  PIDdata->output=0;
+  PIDdata->lastProportionalError=0;
+  PIDdata->IntegralError=0;
+  PIDdata->lastTime=0;
 }
-float iteratePID(sPIDdata*PIDdata)
+
+int iteratePID(sPIDdata*PIDdata)
 {
   float ProportionalError;
   float DerivativeError;
