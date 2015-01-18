@@ -1,0 +1,4 @@
+Coding style: K&R
+Indents: two spaces
+Naming: Maximize readibility abbreviations allowed if they do not compromize readability.
+underscores indstead of camelCase to maximize readability.

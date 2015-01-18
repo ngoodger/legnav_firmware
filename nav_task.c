@@ -1,10 +1,10 @@
-#include "navigationTask.h"  
+t#include "navigationTask.h"  
 
-enum NavigationStates {freeBumper,turnLeft,driveForward,turnRight};
+enum NavigationStates {stateFreeBumper,stateTurnLeft,stateDriveForward,stateTurnRight};
 
-task Navigation_task
+task Navigation_task()
 {
-  NavigationStates NavigationState;  
+  NavigationStates NavigationState=stateFreeBumper;  
 
   SetSensor(IN_1,SENSOR_TOUCH);
   OnFwd(OUT_AC, 30);
@@ -17,7 +17,7 @@ task Navigation_task
 
   switch(NavigationState)
   {
-    case freeBumper:
+    case stateFreeBumper:
       /*Collision detected*/
       if (saveSensor1 == 1){
         /*Reverse until touch sensor not activated*/
@@ -27,11 +27,11 @@ task Navigation_task
       }
       NavigationState=turnLeft;
       break;
-    case turnLeft:
+    case stateTurnLeft:
       RotateMotorEx(OUT_AC, 30, 10, 0, true, true); 
       NavigationState=driveForward;
       break;
-    case driveForward:
+    case stateDriveForward:
       OnFwdReg(OUT_AC,30,OUT_REGMODE_SYNC);
       saveSensor1=SENSOR_1;
       if (driveForwardOneshot){
@@ -45,7 +45,7 @@ task Navigation_task
       driveForwardOneshot;
       NavigationState=turnRight;
       break;
-    case turnRight:
+    case stateTurnRight:
       OnFwdReg(OUT_AC,30,OUT_REGMODE_SYNC);
       NavigationState=turnLeft;
       break;
