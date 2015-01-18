@@ -1,29 +1,16 @@
-#include "poseTask.h"
-#define MOTOR_RIGHT OUT_A
-#define MOTOR_LEFT OUT_B
-#define WHEEL_GEAR_RATIO 10.0
-#define WHEEL_DIAMETER 0.03 
-#define WHEELBASE 0.15
-#define PI 3.141593
+#include "pose_task.h"
 
 /*Initial pose is zero*/
-posescurrentPose={0.0,0.0,0.0};
-mutex mutexCurrentPose;
+pose global_cur_pose={0.0,0.0,0.0};
 
-int getCurrentPose(Pose *returnPose)
-{
-  Acuquire(mutexCurrentPose);
-  memcpy(returnPose,CurrentPose);
-  Release(mutexCurrentPose);
-}
 task poseEstimator_task()
 {
-  long curAngleLeft=MotorRotationCount(MOTOR_LEFT); 
-  long curAngleRight=MotorRotationCount(MOTOR_RIGHT);
-  long prevAngleLeft=curAngleLeft; 
-  long prevAngleRight=curAngleRight; 
-  long deltaAngleLeft=0; 
-  long deltaAngleRight=0; 
+  long cur_enc_l=MotorRotationCount(MOTOR_LEFT); 
+  long cur_enc_r=MotorRotationCount(MOTOR_RIGHT);
+  long last_enc_l=cur_enc_l; 
+  long last_enc_r=cur_enc_r; 
+  long delta_enc_l=0; 
+  long delta_enc_r=0; 
   float deltaLeft=0.0;
   float deltaRight=0.0;
   float deltaLeftMeters=0.0;
@@ -32,27 +19,27 @@ task poseEstimator_task()
 
   while (true)
   {
-  /*Wait for encoder value change (Movement)*/
-  while (curAngleLeft==prevAngleLeft && curAngleRight==prevAngleRight){
+    /*Wait for encoder value change (Movement)*/
+    while (cur_enc_l==last_enc_l && cur_enc_r==last_enc_r){
       Wait(1);
-    curAngleLeft = MotorRotationCount(MOTOR_LEFT);
-    curAngleRight = MotorRotationCount(MOTOR_RIGHT);
+    cur_enc_l= MotorRotationCount(MOTOR_LEFT);
+    cur_enc_r= MotorRotationCount(MOTOR_RIGHT);
   }
 
-  deltaAngleLeft=curAngleLeft-prevAngleLeft;   
-  deltaAngleRight=curAngleRight-prevAngleRight;
+  delta_enc_l=cur_enc_l-last_enc_l;   
+  delta_enc_r=cur_enc_r-last_enc_r;
 
   /*Reverse sign of deltaAngleRight if zero crossing*/   
-  if (deltaAngleLeft!=0){
-    if ((prevAngleLeft>180 && curAngleLeft<180) || 
-        (prevAngleLeft<180 && curAngleLeft>180) )
-      deltaAngleLeft=-1*deltaAngleLeft;      
+  if (delta_enc_l!=0){
+    if ((last_enc_l>180 && cur_enc_l<180) || 
+        (last_enc_l<180 && cur_enc_l>180) )
+      delta_enc_l=-1*delta_enc_l;      
   }
-  /*Reverse sign of deltaAngleRight if zero crossing*/
-  if (deltaAngleRight!=0){
-    if ((prevAngleRight>180 && curAngleRight<180) ||  
-        (prevAngleRight<180 && curAngleRight>180) )
-      deltaAngleRight=-1*deltaAngleRight;      
+  /*Reverse sign of deltaAngleRight if zero crossing*/   
+  if (delta_enc_r!=0){
+    if ((last_enc_r>180 && cur_enc_r<180) || 
+        (last_enc_r<180 && cur_enc_r>180) )
+      delta_enc_r=-1*delta_enc_r;      
   }
 
   deltaLeft=deltaAngleLeft/(360*WHEEL_GEAR_RATIO);
