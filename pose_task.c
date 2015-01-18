@@ -11,9 +11,8 @@ task poseEstimator_task()
   long last_enc_r=cur_enc_r; 
   long delta_enc_l=0; 
   long delta_enc_r=0; 
-  float deltaLeft=0.0;
-  float deltaRight=0.0;
-  float deltaLeftMeters=0.0;
+  float tmp=0.0;
+  float delta_l_m=0.0;
   float deltaRightMeters=0.0;
   float magnitude=0.0;
 
@@ -42,25 +41,23 @@ task poseEstimator_task()
       delta_enc_r=-1*delta_enc_r;      
   }
 
-  deltaLeft=deltaAngleLeft/(360*WHEEL_GEAR_RATIO);
-  deltaLeftMeters=PI*WHEEL_DIAMETER*deltaLeft; 
-  deltaRight=deltaAngleRight/(360*WHEEL_GEAR_RATIO);
-  deltaRightMeters=PI*WHEEL_DIAMETER*deltaRight;
+  tmp=delta_enc_l/(360*WHEEL_GEAR_RATIO);
+  delta_meters_l=PI*WHEEL_DIAMETER*deltaLeft; 
+  tmp=delta_enc_r/(360*WHEEL_GEAR_RATIO);
+  delta_meters_r=PI*WHEEL_DIAMETER*deltaRight;
 
-  /*Approximately update the pose---------------------------------*/
+  /*Approximately update the pose in global coordinate system */
   /*Assumes small angle so turn is line rather than arc.*/
   /*Magnitude of the movement*/
-  magnitude=(deltaRightMeters+deltaRLeftMeters)/2.0;
+  magnitude=(delta_meters_l+delta_meters_l)/2.0;
 
-  Acquire(mutexCurrentPose);
   /*Calculate change in angle phi*/
- currentPose.phi+=(deltaRightMeters-deltaRLeftMeters)/WHEELBASE;
+  currentPose.phi+=(deltaRightMeters-deltaRLeftMeters)/WHEELBASE;
   /*Calculate x movement based on the new angle phi*/
- currentPose.x+=magnitude*cos(phi);
+  currentPose.x+=magnitude*cos(phi);
   /*Calculate y movement based on the new angle phi*/
- currentPose.y+=magnitude*sin(phi); 
-   /*-------------------------------------------------------------*/
-  Release(mutexCurrentPose);
+  currentPose.y+=magnitude*sin(phi); 
+  /*-------------------------------------------------------------*/
 
   /*Update prevAngle with curAngle for next iteration */
   prevAngleLeft=curAngleLeft;
