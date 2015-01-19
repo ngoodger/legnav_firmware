@@ -2,3 +2,5 @@ Coding style: K&R
 Indents: two spaces
 Naming: Maximize readibility abbreviations allowed if they do not compromize readability.
 underscores indstead of camelCase to maximize readability.
+Only needed includes in header files.  Only defines that are used elsewhere.
+Header file should only exist if non-empty.

@@ -1,20 +1,20 @@
 #ifndef PID_H 
 #define PID_H 
 
-struct sPIDdata 
-{
-  float Kp;
-  float Ki;
-  float Kd;
-  float input;
-  float setpoint;
-  float output;
-  float lastProportionalError;
-  float IntegralError;
-  float lastTime 
-}
+  struct pid_data 
+  {
+    float kp;
+    float ki;
+    float kd;
+    float input;
+    float setpoint;
+    float output;
+    float last_p_err;
+    float i_err;
+    float lastTime 
+  }
 
-int iteratePID(sPIDdata*PIDdata);
-int initPID( sPIDdata*PIDdata);
+  int init_pid(pid_data *pd);
+  int iterate_pid(pid_data *pd);
 
 #endif /* PID_H */
