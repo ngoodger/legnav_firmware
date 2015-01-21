@@ -10,8 +10,11 @@ task nav_task()
   static nav_states nav_state=STATE_INIT;  
   static int drive_fwd_oneshot=1;
   static int save_sensor_bumper=1;
-  static pose init_pose;
- 
+  static pose init_pose={0.0,0.0,0.0};
+  static float magnitude=0.0;
+  static float tmp1=0.0;
+  static float tmp2=0.0; 
+
   SetSensor(IN_1,SENSOR_TOUCH);
   while(1){
     switch(nav_state){
@@ -49,12 +52,14 @@ task nav_task()
 	}
 	while (save_sensor_bumper!= 1 && magnitude<MAX_CREEP_DISTANCE){
 	  save_sensor_bumper=SENSOR_BUMPER;
-	  magnitude=sqrt((init_pose.x-global_cur_pose.x)^2+(init_pose.y-global_cur_pose.y^2);
+          tmp1=init_pose.x-global_cur_pose.x;
+          tmp2=init_pose.y-global_cur_pose.y;
+	  magnitude=sqrt(tmp1^2+tmp2^2);
 	}
 	/* Reset oneshot so it is ready for next iteration of this state */
 	drive_fwd_oneshot=1;
 	if (save_sensor_bumper=1)
-	  nav_state=STATE_TURN_LEFT;
+	  nav_state=STATE_TURN_L;
 	else
 	  nav_state=STATE_TURN_R;
 	break;

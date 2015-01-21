@@ -5,19 +5,23 @@
 /*Initial pose is zero*/
 static pose global_cur_pose={0.0,0.0,0.0};
 
-task poseEstimator_task()
+task pose_task()
 {
-  static long cur_enc_l=MotorRotationCount(MOTOR_LEFT); 
-  static long cur_enc_r=MotorRotationCount(MOTOR_RIGHT);
-  static long last_enc_l=cur_enc_l; 
-  static long last_enc_r=cur_enc_r; 
+  static long cur_enc_l=0;
+  static long cur_enc_r=0;
+  static long last_enc_l=0; 
+  static long last_enc_r=0; 
   static long delta_enc_l=0; 
   static long delta_enc_r=0; 
   static float tmp=0.0;
-  static float delta_l_m=0.0;
-  static float delta_r_m=0.0;
+  static float delta_meters_l=0.0;
+  static float delta_meters_r=0.0;
   static float magnitude=0.0;
 
+  cur_enc_l=MotorRotationCount(MOTOR_LEFT); 
+  cur_enc_r=MotorRotationCount(MOTOR_RIGHT);
+  last_enc_l=cur_enc_l; 
+  last_enc_r=cur_enc_r; 
   while (true)
   {
     /*Wait for encoder value change (Movement)*/
@@ -60,7 +64,7 @@ task poseEstimator_task()
     global_cur_pose.y+=magnitude*sin(global_cur_pose.phi); 
 
     /*Update prevAngle with curAngle for next iteration */
-    prevAngleLeft=curAngleLeft;
-    prevAngleRight=curAngleRight;
+    last_enc_l=cur_enc_l;
+    last_enc_r=cur_enc_r;
   }
 }
